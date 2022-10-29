@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -16,12 +17,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['msg', 'user_read', 'conv_show'])]
+    //@Groups({"msg", "conv_show"})
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['msg', 'user_read'])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['user_read'])]
     private array $roles = [];
 
     /**
@@ -37,9 +42,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $messages;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['msg', 'user_read', 'conv_show'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user_read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -52,6 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $study = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['msg', 'conv_show'])]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 255)]

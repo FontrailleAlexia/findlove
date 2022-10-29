@@ -6,6 +6,7 @@ use App\Repository\ConversationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ConversationRepository::class)]
 class Conversation
@@ -13,21 +14,28 @@ class Conversation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['conv_show'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'conversations')]
+   // #[ORM\JoinColumn(onDelete:"SET NULL")]
+    #[Groups(['conv_show'])]
+    //@Groups({"conv_show"})
     private Collection $users;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['conv_show'])]
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class)]
+   // #[ORM\JoinColumn(onDelete:"CASCADE")]
     private Collection $messages;
 
     #[ORM\ManyToOne(inversedBy: 'conversations')]
+   // #[ORM\JoinColumn(onDelete:"CASCADE")]
     private ?Message $lastMessage = null;
 
     #[ORM\Column(nullable: true)]

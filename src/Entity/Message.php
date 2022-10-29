@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\MessageRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\MessageRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
@@ -14,24 +15,30 @@ class Message
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['msg'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[Groups(['msg'])]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['msg'])]
     private ?string $content = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $ccreated_at = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['msg'])]
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
+    //#[ORM\JoinColumn(onDelete:"CASCADE")]
     private ?Conversation $conversation = null;
 
     #[ORM\OneToMany(mappedBy: 'lastMessage', targetEntity: Conversation::class)]
+   // #[ORM\JoinColumn(onDelete:"CASCADE")]
     private Collection $conversations;
 
     public function __construct()

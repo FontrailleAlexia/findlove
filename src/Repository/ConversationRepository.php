@@ -59,6 +59,18 @@ class ConversationRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+        /**
+     * @return string
+     */
+    public function countConvsOfUser(User $user): string
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('count(c.id)');
+        $qb->join('c.users', 'users', 'WITH', $qb->expr()->in('users', $user->getId()));
+        
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
 //    /**
 //     * @return Conversation[] Returns an array of Conversation objects
 //     */

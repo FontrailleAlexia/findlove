@@ -98,9 +98,10 @@ class ConversationController extends AbstractController
                 if ($user != $this->getUser()) {
                     $c['user'] = [
                         'id' => $user->getId(),
-                        'email' => $user->getmail(),
+                        'email' => $user->getEmail(),
                         'firstname' => $user->getFirstname(),
-                        'avatar' => $user->getAvatar()
+                        'avatar' => $user->getAvatar(),
+                        'created_at' => $user->getCreatedAt()
                     ];
                 }
             }
@@ -125,10 +126,9 @@ class ConversationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/convs/{id}/delete", name="conversation_delte", methods={"DELETE"})
-     */
-    /*public function delete(Conversation $conv, EntityManagerInterface $em, EventDispatcherInterface $dispatcher): JsonResponse
+   
+    #[Route("/convs/{id}/delete", name:"conversation_delte", methods:'DELETE')]
+    public function delete(Conversation $conv, EntityManagerInterface $em, EventDispatcherInterface $dispatcher): JsonResponse
     {
         // only the owner can delete a conversation not every one.
         // if deleted, delete it also from the other participiant
@@ -138,21 +138,25 @@ class ConversationController extends AbstractController
         foreach ($conv->getUsers() as $user) {
             $targets[] = "/convs/{$user->getId()}";
         }
-
+        //dd($targets);
         $dispatcher->dispatch(new MercureEvent($targets, [
             'id' => $conv->getId(),
             'isDeleted' => true,
             ])
         );
-    
+        //dd($dispatcher);
+      
         try {
+            
             $em->remove($conv);
             $em->flush();
-        } catch (\Exception $e) {
+            dd($em);
+        } 
+        catch (\Exception $e) {
             dd($e);
              return $this->json(['error' => 'Unexpected Error'], 500);
         }
 
         return $this->json([], 204);
-    }*/
+    }
 }
