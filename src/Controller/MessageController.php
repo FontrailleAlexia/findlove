@@ -36,7 +36,7 @@ class MessageController extends AbstractController
         $currentPage = $request->query->getInt('page', 1);
         $max = $request->query->getInt('max', 15);
         if ($max > 15) {
-           $max = 15;
+            $max = 15;
         }
         $offset = $currentPage * $max - $max;
 
@@ -52,40 +52,42 @@ class MessageController extends AbstractController
         ]);
     }
 
-     /**
+    /**
      * @Route("/convs/{id}/msgs/new", name="new", methods={"POST"})
      * Permet de créer un message dans une conversation ou l'on en est le propriétaire
      * {id} c'est l'id de la conversation que l'utilisateur a crée
      * A VOIR : Ne prends pas en compte la clef
      */
-    public function new(Conversation $conv, Request $request, EntityManagerInterface $em): JsonResponse
+    public function new(Conversation $conv, SerializerInterface $serializer, Request $request, EntityManagerInterface $em): JsonResponse
     {
         $this->denyAccessUnlessGranted('CONV_VIEW', $conv);
+
+        // Retrieve the content of the request, i.e. the JSON
+        $jsonContent = $request->getContent();
+
+        // We deserialize this JSON into a message entity, thanks to the Serializer
+        // We transform the JSON into an object of type App\Entity\Message
+        $message = $serializer->deserialize($jsonContent, Message::class, 'json');
+        //dd($message);
 
         if (!$request->getContent()) {
             $this->json([], 400);
         }
-        $message = new Message();
+        //dd($request->getContent());
+        //$message = new Message();
         $message
             ->setUser($this->getUser())
-            ->setContent($request->getContent())
+          
             ->setConversation($conv)
-            ->setCreatedAt(new \DateTimeImmutable())
-        ;
+            ->setCreatedAt(new \DateTimeImmutable());
 
+        //dd($message);
         $conv->setLastMessage($message);
 
         $em->persist($message);
         $em->persist($conv);
         $em->flush();
 
-        /*return $this->json(
-            [
-                'id' => $message->getId(),
-                'groups' => 'msg'
-            ]
-        );*/
-        
         return $this->json($message, 200, [], [
             'groups' => 'msg'
         ], Response::HTTP_CREATED);
@@ -103,9 +105,10 @@ class MessageController extends AbstractController
          */
         $this->denyAccessUnlessGranted('DELETE_MSG', $message, 'Only the admins or the message owner can delete it.');
 
-        $dispatcher->dispatch(new MercureEvent(["/msgs/{$message->getConversation()->getId()}"], [
-            'id' => $message->getId(),
-            'isDeleted' => true,
+        $dispatcher->dispatch(
+            new MercureEvent(["/msgs/{$message->getConversation()->getId()}"], [
+                'id' => $message->getId(),
+                'isDeleted' => true,
             ])
         );
 
@@ -125,13 +128,13 @@ class MessageController extends AbstractController
          * @todo Notify the conversation that the last message is updated.
          */
         $this->denyAccessUnlessGranted('EDIT_MSG', $message, 'Only the admins or the message owner can edit it.');
-        $content = $request->getContent();
+        $contenu = $request->getContent();
 
-        if (empty($content)) {
+        if (empty($contenu)) {
             return $this->json(['msg' => 'Content Required'], 400);
         }
 
-        $message->setContent($content);
+        $message->setContenu($contenu);
 
         $em->persist($message);
         $em->flush();

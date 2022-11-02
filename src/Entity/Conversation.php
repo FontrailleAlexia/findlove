@@ -19,7 +19,7 @@ class Conversation
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'conversations')]
-   // #[ORM\JoinColumn(onDelete:"SET NULL")]
+    // #[ORM\JoinColumn(onDelete:"SET NULL")]
     #[Groups(['conv_show'])]
     //@Groups({"conv_show"})
     private Collection $users;
@@ -31,15 +31,12 @@ class Conversation
     #[Groups(['conv_show'])]
     private ?\DateTimeImmutable $updated_at = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="conversation", cascade={"remove"})
-     */
+    #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class, cascade: ["all"])]
+    
     private Collection $messages;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Message::class, inversedBy="conversations")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(inversedBy: 'conversations', cascade: ["all"])]
+    
     private ?Message $lastMessage = null;
 
     #[ORM\Column(nullable: true)]

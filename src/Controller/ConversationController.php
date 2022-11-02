@@ -61,13 +61,12 @@ class ConversationController extends AbstractController
         $conv->addUser($this->getUser())
             ->addUser($user)
             ->setCreatedAt(new \DateTimeImmutable())
-            ->setOwnerId($this->getUser()->getId())
-        ;
+            ->setOwnerId($this->getUser()->getId());
         $em->persist($conv);
         $em->flush();
 
         return $this->json([
-            'id' => $conv->getId(), 
+            'id' => $conv->getId(),
             'alreadyExists' => false,
         ]);
     }
@@ -95,9 +94,9 @@ class ConversationController extends AbstractController
             $c = [];
             $c['id'] = $conv->getId();
             $c['ownerId'] = $conv->getOwnerId();
-            $c['msg'] = $conv->getLastMessage() !== null ? $conv->getLastMessage()->getContent(): 'Start Chat Now';
-            $c['date'] = $conv->getLastMessage() !== null ? $conv->getLastMessage()->getUpdatedAt(): $conv->getUpdatedAt();
-            
+            $c['msg'] = $conv->getLastMessage() !== null ? $conv->getLastMessage()->getContenu() : 'Start Chat Now';
+            $c['date'] = $conv->getLastMessage() !== null ? $conv->getLastMessage()->getUpdatedAt() : $conv->getUpdatedAt();
+
             foreach ($conv->getUsers() as $user) {
                 if ($user != $this->getUser()) {
                     $c['user'] = [
@@ -148,23 +147,22 @@ class ConversationController extends AbstractController
         foreach ($conv->getUsers() as $user) {
             $targets[] = "/convs/{$user->getId()}";
         }
-        //dd($targets);
-        $dispatcher->dispatch(new MercureEvent($targets, [
-            'id' => $conv->getId(),
-            'isDeleted' => true,
+
+        $dispatcher->dispatch(
+            new MercureEvent($targets, [
+                'id' => $conv->getId(),
+                'isDeleted' => true,
             ])
         );
-        //dd($dispatcher);
-      
+
+
         try {
-            
+
             $em->remove($conv);
             $em->flush();
-            //dd($em);
-        } 
-        catch (\Exception $e) {
-            //dd($e);
-             return $this->json(['error' => 'Unexpected Error'], 500);
+        } catch (\Exception $e) {
+            dd($e);
+            return $this->json(['error' => 'Unexpected Error'], 500);
         }
 
         return $this->json([], 204);

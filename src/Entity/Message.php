@@ -24,7 +24,7 @@ class Message
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['msg'])]
-    private ?string $content = null;
+    private ?string $contenu = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -33,15 +33,12 @@ class Message
     #[Groups(['msg'])]
     private ?\DateTimeImmutable $updated_at = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Conversation::class, inversedBy="messages")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(inversedBy: 'messages', cascade: ["persist","remove"])]
+    #[ORM\JoinColumn(onDelete:["cascade"])]
     private ?Conversation $conversation = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="lastMessage", cascade={"remove"})
-     */
+    #[ORM\OneToMany(mappedBy: 'lastMessage', targetEntity: Conversation::class)]
+    #[ORM\JoinColumn(onDelete:["cascade"])]
     private Collection $conversations;
 
     public function __construct()
@@ -66,24 +63,24 @@ class Message
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getContenu(): ?string
     {
-        return $this->content;
+        return $this->contenu;
     }
 
-    public function setContent(string $content): self
+    public function setContenu(string $contenu): self
     {
-        $this->content = $content;
+        $this->contenu = $contenu;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getcreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setcreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
 
