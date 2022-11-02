@@ -26,6 +26,8 @@ class ConversationController extends AbstractController
 {
     /**
      * @Route("/convs/new/{id}", name="conversation_new", methods={"POST", "GET"})
+     * ROUTE OK
+     * Permet de créer une nouvelle conversation
      */
     public function new(User $user, ConversationRepository $convRepo, EntityManagerInterface $em, Security $security): JsonResponse
     {
@@ -72,6 +74,8 @@ class ConversationController extends AbstractController
 
     /**
      * @Route("/convs", name="conversations", methods={"GET"})
+     * Permet d'afficher les conversations de l'utilisateur connecté
+     * ROUTE OK
      */
     public function convs(Request $request,  ConversationRepository $convRepo): Response
     {
@@ -116,6 +120,8 @@ class ConversationController extends AbstractController
 
     /**
      * @Route("/convs/{id}", name="conversation_show", methods={"GET"})
+     * Permet d'afficher une conversation selon l'ID de l'utilisateur connecté
+     * ROUTE OK
      */
     public function conv(Conversation $conv): JsonResponse
     {
@@ -126,8 +132,12 @@ class ConversationController extends AbstractController
         ]);
     }
 
-   
-    #[Route("/convs/{id}/delete", name:"conversation_delte", methods:'DELETE')]
+    /**
+     * @Route("/convs/{id}/delete", name="conversation_delte", methods={"DELETE"})
+     * Permet de supprimer une conversation
+     * ROUTE OK
+     */
+    //#[Route("/convs/{id}/delete", name:"conversation_delte", methods:'DELETE')]
     public function delete(Conversation $conv, EntityManagerInterface $em, EventDispatcherInterface $dispatcher): JsonResponse
     {
         // only the owner can delete a conversation not every one.
@@ -150,10 +160,10 @@ class ConversationController extends AbstractController
             
             $em->remove($conv);
             $em->flush();
-            dd($em);
+            //dd($em);
         } 
         catch (\Exception $e) {
-            dd($e);
+            //dd($e);
              return $this->json(['error' => 'Unexpected Error'], 500);
         }
 

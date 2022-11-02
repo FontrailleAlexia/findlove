@@ -27,18 +27,21 @@ class Message
     private ?string $content = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $ccreated_at = null;
+    private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['msg'])]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'messages')]
-    //#[ORM\JoinColumn(onDelete:"CASCADE")]
+    /**
+     * @ORM\ManyToOne(targetEntity=Conversation::class, inversedBy="messages")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
     private ?Conversation $conversation = null;
 
-    #[ORM\OneToMany(mappedBy: 'lastMessage', targetEntity: Conversation::class)]
-   // #[ORM\JoinColumn(onDelete:"CASCADE")]
+    /**
+     * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="lastMessage", cascade={"remove"})
+     */
     private Collection $conversations;
 
     public function __construct()
@@ -75,14 +78,14 @@ class Message
         return $this;
     }
 
-    public function getCcreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->ccreated_at;
+        return $this->created_at;
     }
 
-    public function setCcreatedAt(\DateTimeImmutable $ccreated_at): self
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
-        $this->ccreated_at = $ccreated_at;
+        $this->created_at = $created_at;
 
         return $this;
     }

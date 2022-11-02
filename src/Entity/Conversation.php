@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Cascade;
 
 #[ORM\Entity(repositoryClass: ConversationRepository::class)]
 class Conversation
@@ -30,12 +31,15 @@ class Conversation
     #[Groups(['conv_show'])]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class)]
-   // #[ORM\JoinColumn(onDelete:"CASCADE")]
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="conversation", cascade={"remove"})
+     */
     private Collection $messages;
 
-    #[ORM\ManyToOne(inversedBy: 'conversations')]
-   // #[ORM\JoinColumn(onDelete:"CASCADE")]
+    /**
+     * @ORM\ManyToOne(targetEntity=Message::class, inversedBy="conversations")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
     private ?Message $lastMessage = null;
 
     #[ORM\Column(nullable: true)]
