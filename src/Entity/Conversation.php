@@ -31,12 +31,12 @@ class Conversation
     #[Groups(['conv_show'])]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class, cascade: ["all"])]
-    
+    //#[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class, cascade: ["all"])]
+    #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class)]
     private Collection $messages;
 
-    #[ORM\ManyToOne(inversedBy: 'conversations', cascade: ["all"])]
-    
+    //#[ORM\ManyToOne(inversedBy: 'conversations', cascade: ["all"])]
+    #[ORM\ManyToOne(inversedBy: 'conversations')]
     private ?Message $lastMessage = null;
 
     #[ORM\Column(nullable: true)]

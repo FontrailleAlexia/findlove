@@ -33,12 +33,13 @@ class Message
     #[Groups(['msg'])]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'messages', cascade: ["persist","remove"])]
-    #[ORM\JoinColumn(onDelete:["cascade"])]
+    //#[ORM\ManyToOne(inversedBy: 'messages', cascade: ["persist","remove"])]
+    //#[ORM\JoinColumn(onDelete:["cascade"])]
+    #[ORM\ManyToOne(inversedBy: 'messages')]
     private ?Conversation $conversation = null;
 
     #[ORM\OneToMany(mappedBy: 'lastMessage', targetEntity: Conversation::class)]
-    #[ORM\JoinColumn(onDelete:["cascade"])]
+    //#[ORM\JoinColumn(onDelete:["cascade"])]
     private Collection $conversations;
 
     public function __construct()
