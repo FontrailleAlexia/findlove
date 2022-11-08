@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Service\UploaderHelper;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -70,5 +73,17 @@ class UserController extends AbstractController
         return $this->json([
             'user' => $user,
         ], Response::HTTP_CREATED, [], ['groups' => 'user_read']);
+    }
+
+    /**
+     * Lister les utilisateurs
+     */
+    #[Route('/api/users', name: 'api_users_read', methods:"GET")]
+    public function read(UserRepository $userRepository, SerializerInterface $serializer): Response
+    {
+        $users = $userRepository->findAll();
+        return $this->json([
+            'users' => $users
+        ], 200, [], ['groups' => ['user_read']]);
     }
 }
