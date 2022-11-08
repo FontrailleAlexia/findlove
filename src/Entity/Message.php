@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\MessageRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\MessageRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
@@ -14,24 +15,33 @@ class Message
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['msg','conv_show'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[Groups(['msg'])]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $content = null;
+    #[Groups(['msg','conv_show'])]
+    private ?string $contenu = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $ccreated_at = null;
+    private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['msg'])]
     private ?\DateTimeImmutable $updated_at = null;
 
+    //#[ORM\ManyToOne(inversedBy: 'messages', cascade: ["persist","remove"])]
+    //#[ORM\JoinColumn(onDelete:["cascade"])]
     #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[Groups(['msg','conv_show'])]
     private ?Conversation $conversation = null;
 
     #[ORM\OneToMany(mappedBy: 'lastMessage', targetEntity: Conversation::class)]
+    //#[ORM\JoinColumn(onDelete:["cascade"])]
+    #[Groups(['msg','conv_show'])]
     private Collection $conversations;
 
     public function __construct()
@@ -56,26 +66,26 @@ class Message
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getContenu(): ?string
     {
-        return $this->content;
+        return $this->contenu;
     }
 
-    public function setContent(string $content): self
+    public function setContenu(string $contenu): self
     {
-        $this->content = $content;
+        $this->contenu = $contenu;
 
         return $this;
     }
 
-    public function getCcreatedAt(): ?\DateTimeImmutable
+    public function getcreatedAt(): ?\DateTimeImmutable
     {
-        return $this->ccreated_at;
+        return $this->created_at;
     }
 
-    public function setCcreatedAt(\DateTimeImmutable $ccreated_at): self
+    public function setcreatedAt(\DateTimeImmutable $created_at): self
     {
-        $this->ccreated_at = $ccreated_at;
+        $this->created_at = $created_at;
 
         return $this;
     }

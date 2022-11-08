@@ -1,0 +1,6 @@
+# config/packages/mercure.yaml
+mercure:
+    hubs:
+        default:
+            url: '%env(MERCURE_PUBLIC_URL)%'
+            jwt_provider: App\Infrastructure\Mercure\Service\JWTProvider

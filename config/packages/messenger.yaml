@@ -1,6 +1,6 @@
 framework:
     messenger:
-        failure_transport: failed
+        #failure_transport: failed
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
@@ -16,6 +16,7 @@ framework:
             # sync: 'sync://'
 
         routing:
+            'App\Infrastructure\Queue\Message\ServiceMethodMessage': async
             Symfony\Component\Mailer\Messenger\SendEmailMessage: async
             Symfony\Component\Notifier\Message\ChatMessage: async
             Symfony\Component\Notifier\Message\SmsMessage: async
