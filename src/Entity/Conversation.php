@@ -25,6 +25,7 @@ class Conversation
     private Collection $users;
 
     #[ORM\Column]
+    #[Groups(['conv_show'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(nullable: true)]
@@ -33,10 +34,12 @@ class Conversation
 
     //#[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class, cascade: ["all"])]
     #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class)]
+    #[Groups(['conv_show'])]
     private Collection $messages;
 
     //#[ORM\ManyToOne(inversedBy: 'conversations', cascade: ["all"])]
     #[ORM\ManyToOne(inversedBy: 'conversations')]
+    #[Groups(['conv_show'])]
     private ?Message $lastMessage = null;
 
     #[ORM\Column(nullable: true)]

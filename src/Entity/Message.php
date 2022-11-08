@@ -15,7 +15,7 @@ class Message
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['msg'])]
+    #[Groups(['msg','conv_show'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
@@ -23,7 +23,7 @@ class Message
     private ?User $user = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['msg'])]
+    #[Groups(['msg','conv_show'])]
     private ?string $contenu = null;
 
     #[ORM\Column]
@@ -36,10 +36,12 @@ class Message
     //#[ORM\ManyToOne(inversedBy: 'messages', cascade: ["persist","remove"])]
     //#[ORM\JoinColumn(onDelete:["cascade"])]
     #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[Groups(['msg','conv_show'])]
     private ?Conversation $conversation = null;
 
     #[ORM\OneToMany(mappedBy: 'lastMessage', targetEntity: Conversation::class)]
     //#[ORM\JoinColumn(onDelete:["cascade"])]
+    #[Groups(['msg','conv_show'])]
     private Collection $conversations;
 
     public function __construct()

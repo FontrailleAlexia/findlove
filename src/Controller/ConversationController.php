@@ -110,11 +110,21 @@ class ConversationController extends AbstractController
             }
             $userConvs[] = $c;
         }
-
+        /*
         return $this->json([
             'data' => $userConvs,
             'count' => (int) $convRepo->countConvsOfUser($this->getUser()),
-        ]);
+            'groups' => 'conv_show'
+        ],[],[]);
+        */
+     
+        
+        return $this->json([
+            'conversations' => $userConvs,
+            'count' => (int) $convRepo->countConvsOfUser($this->getUser()),
+            
+        ],200,[],['groups' => 'conv_show']);
+        
     }
 
     /**
