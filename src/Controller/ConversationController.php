@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\Security;
 class ConversationController extends AbstractController
 {
     /**
-     * @Route("/convs/new/{id}", name="conversation_new", methods={"POST", "GET"})
+     * @Route("/convs/new/{id}", name="conversation_new", methods={"POST"})
      * ROUTE OK
      * Permet de créer une nouvelle conversation
      */

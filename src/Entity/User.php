@@ -54,6 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $birthdate = null;
 
     #[ORM\Column(length: 1)]
+    #[Groups(['user_read'])]
     private ?string $gender = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -64,6 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $avatar = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user_read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
