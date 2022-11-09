@@ -36,12 +36,12 @@ class Message
     //#[ORM\ManyToOne(inversedBy: 'messages', cascade: ["persist","remove"])]
     //#[ORM\JoinColumn(onDelete:["cascade"])]
     #[ORM\ManyToOne(inversedBy: 'messages')]
-    #[Groups(['msg','conv_show'])]
+    #[Groups(['msg'])]
     private ?Conversation $conversation = null;
 
     #[ORM\OneToMany(mappedBy: 'lastMessage', targetEntity: Conversation::class)]
     //#[ORM\JoinColumn(onDelete:["cascade"])]
-    #[Groups(['msg','conv_show'])]
+    #[Groups(['msg'])]
     private Collection $conversations;
 
     public function __construct()

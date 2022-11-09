@@ -43,6 +43,7 @@ class Conversation
     private ?Message $lastMessage = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['conv_show'])]
     private ?int $ownerId = null;
 
     public function __construct()
